@@ -223,7 +223,7 @@ log: # Можно поиграться со значениями
 <img width="1467" height="585" alt="image" src="https://github.com/user-attachments/assets/eab8a6aa-7ca8-4d68-b2af-e2a5c9aecf10" />  
 Плейбук успешно запустился!  
 Теперь расширяем конфиг для Caddy.  
-Для этого необходимо добавить 2 новые задачи в `roles/caddy_deploy/tasks/main.yml`: `Ensure web directory exists` и `Copy custom index.html`:  
+Для этого необходимо добавить 2 новые задачи в roles/caddy_deploy/tasks/main.yml: Ensure web directory exists и Copy custom index.html:  
 ```
 - name: Ensure web directory exists
   file:
