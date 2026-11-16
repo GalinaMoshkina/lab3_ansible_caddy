@@ -25,7 +25,7 @@ local_server ansible_host=localhost
 <img width="1056" height="978" alt="image" src="https://github.com/user-attachments/assets/b4cdc6ee-0cde-4de7-8c73-3051430b2bf2" />  
 Далее пробуем создать текстовый файл на локальном хосте  
 <img width="1411" height="474" alt="image" src="https://github.com/user-attachments/assets/07ac3ed2-df94-4539-8ee1-2b4404f767a7" />
-
+На этом этапе воникла ошибка с командой apt, вызванная отсутствием GPG-ключа для репозитория PostgreSQL. Для ее устранения ключ был добавлен вручную.
 ## 2. Установка Caddy  
 f
 ## 3. Домен и настройка Caddyfile  
