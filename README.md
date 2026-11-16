@@ -235,7 +235,7 @@ log: # Можно поиграться со значениями
   copy:
     src: index.html
     dest: /var/www/html/index.html
-```
+```  
 Также необходимо сделать простой index.html, как требуется в задании:  
 ```
 (base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/files/index.html
@@ -255,7 +255,7 @@ log: # Можно поиграться со значениями
     </p>
 </body>
 </html>
-```
+```  
 И затем поменять `roles/caddy_deploy/templates/Caddyfile.j2` с перенаправлением на наш index.html и добавлением заголовков:  
 ```
 (base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/templates/Caddyfile.j2
