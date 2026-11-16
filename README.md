@@ -224,6 +224,7 @@ log: # Можно поиграться со значениями
 Плейбук успешно запустился!  
 Теперь расширяем конфиг для Caddy.  
 Для этого необходимо добавить 2 новые задачи в roles/caddy_deploy/tasks/main.yml: Ensure web directory exists и Copy custom index.html:  
+
 ```
 - name: Ensure web directory exists
   file:
