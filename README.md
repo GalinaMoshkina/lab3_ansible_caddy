@@ -278,6 +278,7 @@ log: # Можно поиграться со значениями
 ```  
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c23fc346-ef46-4e62-8946-d1be0b57dfe5" />  
 <img width="1846" height="260" alt="image" src="https://github.com/user-attachments/assets/8fd49890-c5be-46b9-bbd3-9eac020054ff" />  
+
 ```
 (base) gala@gala-NMH-WDX9:~/admcn$ curl -I http://localhost
 HTTP/1.1 200 OK
