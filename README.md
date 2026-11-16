@@ -110,9 +110,76 @@ apt не может проверить подпись репозитория Cad
     filename: caddy-stable
     update_cache: yes
 ```
-
 ## 3. Домен и настройка Caddyfile  
-f
+Как оказалось, исправлений из прошлой части не хватило для того, чтобы поправить ситуацию с запуском плейбука. 
+```
+(base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/vars/main.yml
+---
+# vars file for caddy_deploy
+domain_name: "http://localhost"
+log: # Можно поиграться со значениями
+  file: /var/log/caddy/caddy_access.log
+  level: "INFO"
+(base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/templates/Caddyfile.j2
+{{ domain_name }} {
+    root * /usr/share/caddy
+    file_server
+
+    log {
+        output file {{ log.file }}
+        format json
+        level {{ log.level }}
+    }
+}
+
+(base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/tasks/main.yml
+---
+# tasks file for caddy_deploy 
+- name: Install prerequisites
+  apt:
+    pkg:
+    - debian-keyring
+    - debian-archive-keyring
+    - apt-transport-https
+    - curl
+- name: add Caddy repo
+  apt_repository:
+    repo: "deb [trusted=yes] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main"
+    state: present
+    filename: caddy-stable
+- name: add Caddy src repo
+  apt_repository:
+    repo: "deb-src [trusted=yes] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main"
+    state: present
+    filename: caddy-stable
+- name: Install Caddy webserver
+  apt:
+    name: caddy
+    update_cache: yes
+    state: present
+- name: Create config file
+  template:
+    src: Caddyfile.j2 # Откуда берем
+    dest: /etc/caddy/Caddyfile # Куда кладем
+
+- name: Reload with new config
+  service:
+    name: caddy
+    state: reloaded
+- name: Ensure caddy log directory exists
+  file:
+    path: /var/log/caddy
+    state: directory
+    owner: caddy
+    group: caddy
+    mode: '0755'
+```
+<img width="1852" height="825" alt="image" src="https://github.com/user-attachments/assets/71f097aa-470c-4e25-a87d-7ffab2b78e81" />  
+<img width="1841" height="984" alt="image" src="https://github.com/user-attachments/assets/2c0b4da1-7fc9-4550-8142-2ce2a5725055" />  
+<img width="1497" height="356" alt="image" src="https://github.com/user-attachments/assets/e468fc10-2e5e-479f-ba88-5a44ebc89848" />
+
+Ура!!!  
+
 ## Задание  
 1. Переписать пример с созданием и удалением файла из шага 5 Части 1 с ad-hoc команд на плейбук формат,  
    а так же добавить четвертый шаг - перед удалением поменять содержимое файла на любое другое.
