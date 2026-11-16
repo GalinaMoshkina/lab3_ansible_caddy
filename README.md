@@ -274,7 +274,7 @@ log: # Можно поиграться со значениями
         level {{ log.level }}
     }
 }
-```
+```  
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c23fc346-ef46-4e62-8946-d1be0b57dfe5" />  
 <img width="1846" height="260" alt="image" src="https://github.com/user-attachments/assets/8fd49890-c5be-46b9-bbd3-9eac020054ff" />  
 ```
@@ -289,6 +289,6 @@ Server: Custom-Caddy
 Vary: Accept-Encoding
 X-Lab-Task: Task-2-Complete
 Date: Mon, 16 Nov 2026 13:24:01 GMT
-```
+```  
 Ура, всё получилось!  
 
