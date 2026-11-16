@@ -256,12 +256,17 @@ log: # Можно поиграться со значениями
 </body>
 </html>
 ```
-И затем поменять `roles/caddy_deploy/templates/Caddyfile.j2` с перенаправлением на наш index.html:  
+И затем поменять `roles/caddy_deploy/templates/Caddyfile.j2` с перенаправлением на наш index.html и добавлением заголовков:  
 ```
 (base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/templates/Caddyfile.j2
 {{ domain_name }} {
     root * /var/www/html
     file_server
+    
+    header {
+        X-Lab-Task "Task-2-Complete"
+        Server "Custom-Caddy"
+    }
 
     log {
         output file {{ log.file }}
@@ -269,9 +274,21 @@ log: # Можно поиграться со значениями
         level {{ log.level }}
     }
 }
-
 ```
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c23fc346-ef46-4e62-8946-d1be0b57dfe5" />  
 <img width="1846" height="260" alt="image" src="https://github.com/user-attachments/assets/8fd49890-c5be-46b9-bbd3-9eac020054ff" />  
+```
+(base) gala@gala-NMH-WDX9:~/admcn$ curl -I http://localhost
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Length: 313
+Content-Type: text/html; charset=utf-8
+Etag: "dmwnwq3yrul7-8p"
+Last-Modified: Mon, 16 Nov 2026 13:16:44 GMT
+Server: Custom-Caddy
+Vary: Accept-Encoding
+X-Lab-Task: Task-2-Complete
+Date: Mon, 16 Nov 2026 13:24:01 GMT
+```
 Ура, всё получилось!  
 
