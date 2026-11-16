@@ -95,7 +95,7 @@ local_server ansible_host=localhost
   roles:
     - caddy_deploy # собственно, роль для выполнения
 ```
-Запускаем плейбук с помощью команды `ansible-playbook caddy_deploy.yml`, на этом этапе воникла ошибка с командой apt, вызванная отсутствием GPG-ключа для репозитория PostgreSQL. Для ее устранения ключ был добавлен вручную.  
+Запускаем плейбук с помощью команды `ansible-playbook caddy_deploy.yml`, на этом этапе возникла ошибка с командой apt, вызванная отсутствием GPG-ключа для репозитория PostgreSQL. Для ее устранения ключ был добавлен вручную.  
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/35211897-3c0c-47f8-9354-b455a3369279" />  
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/3b214632-5f2b-44bc-bf58-893e58fad4f3" />  
 Новая ошибка  
