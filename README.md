@@ -198,4 +198,80 @@ log: # Можно поиграться со значениями
 2. “Расширить” конфиг вебсервера Caddy любым функционалом по желанию: например, добавить проксирование, или какие-нибудь заголовки ( header ).     Вместо дефолтной страницы Caddy подставить свою, хотя бы index.html с Hello world внутри. Добавить это в качестве дополнительного шага в        tasks.
 
 ## Решение задания  
-f
+Создаем плейбук `task1.yml`, где Ad-hoc команды из шага 5 Части 1 переписаны в единый плейбук (будет возможность создавать, изменять, выводить содержимое и удалять):  
+```
+(base) gala@gala-NMH-WDX9:~/admcn$ cat task1.yml
+---
+- name: Manage test file
+  hosts: my_servers
+  connection: local
+  tasks:
+    - name: 1. Create file
+      shell: echo "Initial content" > $HOME/test.txt
+
+    - name: 2. Change content
+      shell: echo "New updated content" > $HOME/test.txt
+
+    - name: 3. Check content
+      shell: cat $HOME/test.txt
+
+    - name: 4. Delete file
+      file:
+        path: $HOME/test.txt
+        state: absent
+```
+<img width="1467" height="585" alt="image" src="https://github.com/user-attachments/assets/eab8a6aa-7ca8-4d68-b2af-e2a5c9aecf10" />  
+Плейбук успешно запустился!  
+Теперь расширяем конфиг для Caddy.  
+Для этого необходимо добавить 2 новые задачи в `roles/caddy_deploy/tasks/main.yml`: `Ensure web directory exists` и `Copy custom index.html`:  
+```
+- name: Ensure web directory exists
+  file:
+    path: /var/www/html
+    state: directory
+    mode: '0755'
+
+- name: Copy custom index.html
+  copy:
+    src: index.html
+    dest: /var/www/html/index.html
+```
+Также необходимо сделать простой index.html, как требуется в задании:  
+```
+(base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/files/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task2</title>
+</head>
+<body>
+    <h1>
+        Hello, world! Task 2 is done!!!
+    </h1>
+    <p>
+        Deployed via Ansible and Caddy
+    </p>
+</body>
+</html>
+```
+И затем поменять `roles/caddy_deploy/templates/Caddyfile.j2` с перенаправлением на наш index.html:  
+```
+(base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/templates/Caddyfile.j2
+{{ domain_name }} {
+    root * /var/www/html
+    file_server
+
+    log {
+        output file {{ log.file }}
+        format json
+        level {{ log.level }}
+    }
+}
+
+```
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c23fc346-ef46-4e62-8946-d1be0b57dfe5" />  
+<img width="1846" height="260" alt="image" src="https://github.com/user-attachments/assets/8fd49890-c5be-46b9-bbd3-9eac020054ff" />  
+Ура, всё получилось!  
+
