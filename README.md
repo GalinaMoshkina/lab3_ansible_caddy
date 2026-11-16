@@ -224,7 +224,6 @@ log: # Можно поиграться со значениями
 Плейбук успешно запустился!  
 Теперь расширяем конфиг для Caddy.  
 Для этого необходимо добавить 2 новые задачи в roles/caddy_deploy/tasks/main.yml: Ensure web directory exists и Copy custom index.html:  
-```
 - name: Ensure web directory exists
   file:
     path: /var/www/html
@@ -235,9 +234,9 @@ log: # Можно поиграться со значениями
   copy:
     src: index.html
     dest: /var/www/html/index.html
-```  
+
 Также необходимо сделать простой index.html, как требуется в задании:  
-```
+
 (base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/files/index.html
 <!DOCTYPE html>
 <html lang="en">
@@ -255,9 +254,9 @@ log: # Можно поиграться со значениями
     </p>
 </body>
 </html>
-```  
+
 И затем поменять `roles/caddy_deploy/templates/Caddyfile.j2` с перенаправлением на наш index.html и добавлением заголовков:  
-```
+
 (base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/templates/Caddyfile.j2
 {{ domain_name }} {
     root * /var/www/html
@@ -274,10 +273,10 @@ log: # Можно поиграться со значениями
         level {{ log.level }}
     }
 }
-```  
+ 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c23fc346-ef46-4e62-8946-d1be0b57dfe5" />  
 <img width="1846" height="260" alt="image" src="https://github.com/user-attachments/assets/8fd49890-c5be-46b9-bbd3-9eac020054ff" />  
-```
+
 (base) gala@gala-NMH-WDX9:~/admcn$ curl -I http://localhost
 HTTP/1.1 200 OK
 Accept-Ranges: bytes
@@ -289,6 +288,6 @@ Server: Custom-Caddy
 Vary: Accept-Encoding
 X-Lab-Task: Task-2-Complete
 Date: Mon, 16 Nov 2026 13:24:01 GMT
-```  
+ 
 Ура, всё получилось!  
 
