@@ -100,8 +100,8 @@ local_server ansible_host=localhost
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/3b214632-5f2b-44bc-bf58-893e58fad4f3" />  
 Новая ошибка  
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/46153e4a-6ebc-4615-b718-a07fe00bd344" />  
-apt не может проверить подпись репозитория Caddy, потому что скачанный GPG-ключ не был правильно распознан системой.  
-Я поменяла в файле `main.yml` задачу Add Caddy repository, а именно добавила `[trusted=yes]` в `repo`:  
+apt не может проверить подпись репозитория Caddy, потому что скачанный GPG-ключ не был правильно распознан системой, либо вовсе был просрочен.    
+Было принято решение поменять в файле `main.yml` задачи "add Caddy repo" и "add Caddy src repo", а именно добавить `[trusted=yes]` в `repo`:  
 ```
 - name: Add Caddy repository (allowing expired signature for this lab)
   apt_repository:
@@ -109,9 +109,18 @@ apt не может проверить подпись репозитория Cad
     state: present
     filename: caddy-stable
     update_cache: yes
+```  
+Тогда, убирается сам блок "Add key for Caddy repo":  
+```
+- name: Add key for Caddy repo
+   apt_key:
+     url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+     state: present
+     keyring: /usr/share/keyrings/caddy-stable-archive-keyring.gpg
 ```
 ## 3. Домен и настройка Caddyfile  
-Как оказалось, исправлений из прошлой части не хватило для того, чтобы поправить ситуацию с запуском плейбука. 
+Как оказалось, исправлений из прошлой части не хватило для того, чтобы поправить ситуацию с запуском плейбука.  
+Добавляем `roles/caddy_deploy/vars/main.yml` и `roles/caddy_deploy/templates/Caddyfile.j2` и тоже их меняем, а именно вместо localhost прописываем http://localhost (была ошибка с domain_name: "localhost").  
 ```
 (base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/vars/main.yml
 ---
@@ -131,7 +140,10 @@ log: # Можно поиграться со значениями
         level {{ log.level }}
     }
 }
-
+```
+Также в методичке указан путь /var/log/caddy_access.log. Пользователь caddy, от имени которого работает сервис, не имеет прав на запись в /var/log/. Возникает ошибка permission denied. Был изменен на /var/log/caddy/caddy_access.log и добавлена задача создания этой директории с нужными правами.  
+Теперь `roles/caddy_deploy/tasks/main.yml`. В нем добавляем шаги, отвечающие за создание конфигурационного файла из шаблона и последующую перезагрузку сервиса. Только, в месте src: templates/Caddyfile.j2 убираем templates, оставляем src: Caddyfile.j2 (тоже возникала вместе с этим ошибка).  
+```
 (base) gala@gala-NMH-WDX9:~/admcn$ cat roles/caddy_deploy/tasks/main.yml
 ---
 # tasks file for caddy_deploy 
@@ -177,8 +189,8 @@ log: # Можно поиграться со значениями
 <img width="1852" height="825" alt="image" src="https://github.com/user-attachments/assets/71f097aa-470c-4e25-a87d-7ffab2b78e81" />  
 <img width="1841" height="984" alt="image" src="https://github.com/user-attachments/assets/2c0b4da1-7fc9-4550-8142-2ce2a5725055" />  
 <img width="1497" height="356" alt="image" src="https://github.com/user-attachments/assets/e468fc10-2e5e-479f-ba88-5a44ebc89848" />
+Ура!!! Плейбук завершился с failed=0, а служба Caddy перешла в статус active (running)!  
 
-Ура!!!  
 
 ## Задание  
 1. Переписать пример с созданием и удалением файла из шага 5 Части 1 с ad-hoc команд на плейбук формат,  
